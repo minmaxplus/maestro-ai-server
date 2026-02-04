@@ -1,0 +1,16 @@
+# User specific
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.python-version
+
+# System
+.DS_Store
+
+# Logs
+logs/
+*.log
