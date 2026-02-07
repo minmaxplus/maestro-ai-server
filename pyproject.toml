@@ -1,25 +1,47 @@
 [project]
 name = "maestro-ai-server"
 version = "0.1.0"
-description = "A custom AI server for Maestro, replacing Maestro Cloud with local/private LLM support."
+description = "Maestro AI Service - 基于 LangChain 的 AI 断言和文本提取服务"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
+authors = [
+    { name = "LJY" }
+]
 dependencies = [
-    "fastapi>=0.128.0",
-    "langchain>=1.2.7",
-    "langchain-openai>=1.1.7",
-    "pydantic>=2.12.5",
-    "python-dotenv>=1.2.1",
-    "uvicorn>=0.40.0",
+    # Web 框架
+    "fastapi[standard]>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+    "python-multipart>=0.0.18",
+    # LangChain 核心
+    "langchain>=0.3.0",
+    "langchain-openai>=0.3.0",
+    "langsmith>=0.2.0",
+    # 数据验证
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    # 可靠性
+    "tenacity>=9.0.0",
+    # 日志
+    "structlog>=24.0.0",
+    # 图像处理
+    "pillow>=11.0.0",
 ]
 
-[dependency-groups]
+[project.optional-dependencies]
 dev = [
-    "httpx>=0.28.1",
-    "pytest>=9.0.2",
-    "pytest-asyncio>=1.3.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "httpx>=0.28.0",
+    "pytest-cov>=6.0.0",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]

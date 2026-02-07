@@ -1,33 +1,33 @@
-# Use python 3.12 slim image (supports ARM64/Raspberry Pi)
-FROM python:3.12-slim
+# Maestro AI Server Dockerfile
+# 基于 Python 3.11，使用 uv 管理依赖
+# @author LJY
 
-# Install uv from the official image
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+FROM python:3.11-slim
 
-# Set working directory
+# 安装 uv
+RUN pip install uv
+
 WORKDIR /app
 
-# Enable bytecode compilation
-ENV UV_COMPILE_BYTECODE=1
+# 复制依赖文件
+COPY pyproject.toml .
 
-# Ensure python output is sent directly to terminal (for real-time logs)
-ENV PYTHONUNBUFFERED=1
+# 安装依赖
+RUN uv pip install --system -e .
 
-# Copy dependency files first for caching
-COPY pyproject.toml uv.lock ./
+# 复制应用代码
+COPY app/ ./app/
 
-# Install dependencies
-# --frozen: sync from lockfile without updating it
-# --no-dev: do not install dev dependencies
-# --no-install-project: do not install the current project as a package
-RUN uv sync --frozen --no-dev --no-install-project
+# 创建非 root 用户
+RUN useradd -m appuser && chown -R appuser:appuser /app
+USER appuser
 
-# Copy the rest of the application code
-COPY . .
+# 暴露端口
+EXPOSE 8000
 
-# Expose the API port
-EXPOSE 8500
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
 
-# Run the application
-# We use 'uv run' to ensure it uses the environment's dependencies
-CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8500"]
+# 启动命令
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

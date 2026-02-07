@@ -1,0 +1,22 @@
+"""
+Maestro AI Server - Prompt 模块
+@author LJY
+"""
+
+from app.agents.prompts.defect_detection import (
+    ASSERTION_SECTION_TEMPLATE,
+    DEFECT_DETECTION_SYSTEM_PROMPT,
+    DEFECT_DETECTION_USER_PROMPT,
+)
+from app.agents.prompts.text_extraction import (
+    TEXT_EXTRACTION_SYSTEM_PROMPT,
+    TEXT_EXTRACTION_USER_PROMPT,
+)
+
+__all__ = [
+    "DEFECT_DETECTION_SYSTEM_PROMPT",
+    "DEFECT_DETECTION_USER_PROMPT",
+    "ASSERTION_SECTION_TEMPLATE",
+    "TEXT_EXTRACTION_SYSTEM_PROMPT",
+    "TEXT_EXTRACTION_USER_PROMPT",
+]
