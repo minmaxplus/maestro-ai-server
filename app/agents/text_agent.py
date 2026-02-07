@@ -1,9 +1,11 @@
 """
 Maestro AI Server - 文本提取 Agent
+使用 LangChain v1 create_agent 和结构化输出
 @author LJY
 """
 
 import structlog
+from pydantic import BaseModel, Field
 
 from app.agents.base import BaseAgent
 from app.agents.prompts import (
@@ -14,27 +16,20 @@ from app.agents.prompts import (
 logger = structlog.get_logger()
 
 
+class TextExtractionOutput(BaseModel):
+    """文本提取结构化输出"""
+    text: str = Field(default="", description="提取的文本内容")
+
+
 class TextExtractionAgent(BaseAgent):
     """文本提取 Agent"""
     
-    def get_system_prompt(self) -> str:
-        return TEXT_EXTRACTION_SYSTEM_PROMPT
+    def __init__(self, llm):
+        super().__init__(llm, TextExtractionOutput)
     
-    def get_user_prompt(self, query: str, **kwargs) -> str:
-        return TEXT_EXTRACTION_USER_PROMPT.format(query=query)
-    
-    def parse_response(self, response: str) -> str:
-        """解析文本提取响应"""
-        data = self._extract_json_from_response(response)
-        text = data.get("text", "")
-        
-        logger.info(
-            "text_extracted",
-            text_length=len(text),
-            has_content=bool(text)
-        )
-        
-        return text
+    def get_prompt(self, query: str, **kwargs) -> str:
+        prompt = f"{TEXT_EXTRACTION_SYSTEM_PROMPT}\n\n{TEXT_EXTRACTION_USER_PROMPT.format(query=query)}"
+        return prompt
     
     async def extract(self, image_data: bytes, query: str) -> str:
         """
@@ -47,4 +42,12 @@ class TextExtractionAgent(BaseAgent):
         Returns:
             提取的文本
         """
-        return await self.invoke(image_data, query=query)
+        result: TextExtractionOutput = await self.invoke(image_data, query=query)
+        
+        logger.info(
+            "text_extracted",
+            text_length=len(result.text),
+            has_content=bool(result.text)
+        )
+        
+        return result.text

@@ -12,10 +12,10 @@ dependencies = [
     "fastapi[standard]>=0.115.0",
     "uvicorn[standard]>=0.34.0",
     "python-multipart>=0.0.18",
-    # LangChain 核心
-    "langchain>=0.3.0",
-    "langchain-openai>=0.3.0",
-    "langsmith>=0.2.0",
+    # LangChain 核心 (v1+)
+    "langchain>=1.2.9",
+    "langchain-openai>=1.1.7",
+    "langsmith>=0.6.9",
     # 数据验证
     "pydantic>=2.0",
     "pydantic-settings>=2.0",
