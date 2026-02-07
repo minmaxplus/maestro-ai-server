@@ -10,7 +10,7 @@ RUN pip install uv
 WORKDIR /app
 
 # 复制依赖文件
-COPY pyproject.toml .
+COPY pyproject.toml README.md ./
 
 # 安装依赖
 RUN uv pip install --system -e .
