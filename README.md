@@ -51,8 +51,26 @@ maestro test your_flow.yaml
 
 ## Docker 部署
 
+### 打包镜像
+
 ```bash
+# 本地构建
+docker build -t maestro-ai-server:latest .
+
+# 跨平台构建 ARM 和 x64 (需推送到仓库，拉取时自动选择平台)
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t your-registry.com/maestro-ai-server:latest \
+  --push .
+```
+
+### 运行容器
+
+```bash
+# 使用 docker compose
 docker compose up -d
+
+# 或直接运行
+docker run -d -p 8000:8000 --env-file .env maestro-ai-server:latest
 ```
 
 ## 接口说明

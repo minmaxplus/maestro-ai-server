@@ -1,7 +1,7 @@
 [project]
 name = "maestro-ai-server"
 version = "0.1.0"
-description = "Maestro AI Service - 基于 LangChain 的 AI 断言和文本提取服务"
+description = "Maestro AI Service"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
