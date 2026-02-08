@@ -11,7 +11,7 @@
 
 ### 可靠性机制
 
-- ✅ **结构化输出**: LangChain v1 `ProviderStrategy` 原生支持
+- ✅ **结构化输出**: LangChain `ProviderStrategy` 原生支持
 - ✅ **自动重试**: 指数退避重试机制
 - ✅ **LangSmith 追踪**: 生产环境调用追踪
 - ✅ **请求日志**: 详细的请求/响应日志 (JSON格式)，自动脱敏敏感数据
@@ -110,5 +110,4 @@ app/
 - Python 3.11+
 - LangChain v1.2.9
 - FastAPI
-- Kimi (moonshot-v1-vision)
 - LangSmith
