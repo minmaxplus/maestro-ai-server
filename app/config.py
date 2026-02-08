@@ -24,6 +24,7 @@ class Settings(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
+        extra="ignore",
     )
     
     # LLM 配置
@@ -45,6 +46,10 @@ class Settings(BaseSettings):
     
     # OpenAI 配置
     openai_api_key: str = Field(default="", description="OpenAI API Key")
+    openai_api_base: str = Field(
+        default="https://api.openai.com/v1",
+        description="OpenAI API Base URL"
+    )
     openai_model: str = Field(default="gpt-4o", description="OpenAI 模型名称")
     
     # 重试配置
@@ -87,7 +92,7 @@ class Settings(BaseSettings):
         """获取当前 LLM 提供商的 API Base URL"""
         if self.llm_provider == LLMProvider.KIMI:
             return self.kimi_api_base
-        return None  # OpenAI 使用默认 URL
+        return self.openai_api_base
 
 
 @lru_cache

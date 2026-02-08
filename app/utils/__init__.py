@@ -5,6 +5,7 @@ Maestro AI Server - 工具模块
 
 from app.utils.image import (
     decode_base64_image,
+    decode_byte_array_image,
     encode_image_to_base64,
     get_image_mime_type,
     resize_image_if_needed,
@@ -13,6 +14,7 @@ from app.utils.image import (
 
 __all__ = [
     "decode_base64_image",
+    "decode_byte_array_image",
     "encode_image_to_base64",
     "get_image_mime_type",
     "resize_image_if_needed",

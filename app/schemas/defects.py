@@ -14,7 +14,7 @@ class Defect(BaseModel):
 
 class FindDefectsRequest(BaseModel):
     """缺陷检测请求"""
-    screen: bytes = Field(description="屏幕截图 (Base64 编码)")
+    screen: list[int] = Field(description="屏幕截图 (字节数组)")
     assertion: str | None = Field(
         default=None,
         description="可选的断言条件，用于 assertWithAI 命令"

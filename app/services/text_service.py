@@ -7,7 +7,7 @@ import structlog
 
 from app.agents import TextExtractionAgent
 from app.core.llm import create_llm_client
-from app.utils import decode_base64_image
+from app.utils import decode_byte_array_image
 
 logger = structlog.get_logger()
 
@@ -19,19 +19,19 @@ class TextService:
         llm = create_llm_client()
         self.agent = TextExtractionAgent(llm)
     
-    async def extract_text(self, screen: bytes, query: str) -> str:
+    async def extract_text(self, screen: list[int], query: str) -> str:
         """
         从屏幕截图中提取文本
         
         Args:
-            screen: Base64 编码的屏幕截图
+            screen: 字节数组格式的屏幕截图
             query: 查询条件
         
         Returns:
             提取的文本
         """
-        # 解码 Base64 图像
-        image_data = decode_base64_image(screen)
+        # 将有符号字节数组转换为 bytes
+        image_data = decode_byte_array_image(screen)
         
         logger.info(
             "extract_text_start",

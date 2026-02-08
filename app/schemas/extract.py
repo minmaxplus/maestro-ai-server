@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 class ExtractTextRequest(BaseModel):
     """文本提取请求"""
-    screen: bytes = Field(description="屏幕截图 (Base64 编码)")
+    screen: list[int] = Field(description="屏幕截图 (字节数组)")
     query: str = Field(description="查询条件，描述需要提取的文本")
 
 

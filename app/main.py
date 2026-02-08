@@ -16,22 +16,20 @@ from app.api.v2 import router as v2_router
 from app.config import get_settings
 from app.core import LLMError, MaestroAIError
 
-# 配置结构化日志
+# 配置结构化日志 - 直接输出到控制台
 structlog.configure(
     processors=[
-        structlog.stdlib.filter_by_level,
-        structlog.stdlib.add_logger_name,
+        structlog.contextvars.merge_contextvars,
         structlog.stdlib.add_log_level,
-        structlog.stdlib.PositionalArgumentsFormatter(),
         structlog.processors.TimeStamper(fmt="iso"),
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
         structlog.processors.UnicodeDecoder(),
-        structlog.processors.JSONRenderer()
+        structlog.dev.ConsoleRenderer()  # 开发环境使用彩色输出
     ],
-    wrapper_class=structlog.stdlib.BoundLogger,
+    wrapper_class=structlog.make_filtering_bound_logger(20),  # INFO level
     context_class=dict,
-    logger_factory=structlog.stdlib.LoggerFactory(),
+    logger_factory=structlog.PrintLoggerFactory(),  # 直接打印到 stdout
     cache_logger_on_first_use=True,
 )
 
@@ -77,6 +75,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 日志中间件
+from app.middleware.logging import LoggingMiddleware
+app.add_middleware(LoggingMiddleware)
 
 
 @app.exception_handler(MaestroAIError)

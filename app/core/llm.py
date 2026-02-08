@@ -28,5 +28,6 @@ def create_llm_client(settings: Settings | None = None) -> ChatOpenAI:
         return ChatOpenAI(
             model=settings.openai_model,
             api_key=settings.openai_api_key,
+            base_url=settings.openai_api_base,
             max_retries=settings.max_retries,
         )

@@ -36,6 +36,16 @@ def decode_base64_image(base64_string: str | bytes) -> bytes:
         raise ImageProcessingError(f"Base64 解码失败: {e}")
 
 
+def decode_byte_array_image(byte_array: list[int]) -> bytes:
+    """
+    将 Maestro CLI 发送的有符号字节数组转换为 bytes
+    Kotlin/JVM 的 byte 是有符号的 (-128 到 127), 需要转换为无符号 (0 到 255)
+    """
+    # 将有符号字节转换为无符号字节
+    unsigned_bytes = [(b & 0xFF) for b in byte_array]
+    return bytes(unsigned_bytes)
+
+
 def encode_image_to_base64(image_data: bytes) -> str:
     """将图像字节编码为 Base64 字符串"""
     return base64.b64encode(image_data).decode("utf-8")

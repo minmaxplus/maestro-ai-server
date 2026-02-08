@@ -8,7 +8,7 @@ import structlog
 from app.agents import DefectDetectionAgent
 from app.core.llm import create_llm_client
 from app.schemas import Defect
-from app.utils import decode_base64_image
+from app.utils import decode_byte_array_image
 
 logger = structlog.get_logger()
 
@@ -22,21 +22,21 @@ class DefectService:
     
     async def find_defects(
         self,
-        screen: bytes,
+        screen: list[int],
         assertion: str | None = None
     ) -> list[Defect]:
         """
         检测屏幕截图中的缺陷
         
         Args:
-            screen: Base64 编码的屏幕截图
+            screen: 字节数组格式的屏幕截图 (Maestro CLI 发送的有符号字节数组)
             assertion: 可选的断言条件
         
         Returns:
             检测到的缺陷列表
         """
-        # 解码 Base64 图像
-        image_data = decode_base64_image(screen)
+        # 将有符号字节数组转换为 bytes
+        image_data = decode_byte_array_image(screen)
         
         logger.info(
             "find_defects_start",

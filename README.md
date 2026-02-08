@@ -14,6 +14,7 @@
 - ✅ **结构化输出**: LangChain v1 `ProviderStrategy` 原生支持
 - ✅ **自动重试**: 指数退避重试机制
 - ✅ **LangSmith 追踪**: 生产环境调用追踪
+- ✅ **请求日志**: 详细的请求/响应日志 (JSON格式)，自动脱敏敏感数据
 
 ## 快速开始
 
@@ -22,6 +23,11 @@
 ```bash
 cp .env.example .env
 # 编辑 .env，填入 Kimi API Key 和 LangSmith API Key
+# 如需使用 OpenAI 并指向自定义地址 (如 Kimi 兼容接口):
+# LLM_PROVIDER=openai
+# OPENAI_API_KEY=your_key
+# OPENAI_API_BASE=https://api.moonshot.cn/v1
+# OPENAI_MODEL=kimi-k2.5
 ```
 
 ### 2. 安装依赖
