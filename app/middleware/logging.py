@@ -112,13 +112,20 @@ class LoggingMiddleware(BaseHTTPMiddleware):
     def _mask_sensitive_data(self, data: any):
         """递归屏蔽 JSON 中的敏感/大字段"""
         if isinstance(data, dict):
-            for key, value in data.items():
-                if key in ["screen", "image", "file"] and isinstance(value, str):
-                    if len(value) > 100:
-                        data[key] = f"<base64_data_len_{len(value)}>"
+            for key, value in list(data.items()):
+                # 屏蔽图像相关字段
+                if key in ["screen", "image", "file", "imageData", "data"]:
+                    if isinstance(value, str) and len(value) > 100:
+                        data[key] = f"<base64_string_len_{len(value)}>"
+                    elif isinstance(value, list) and len(value) > 100:
+                        # 字节数组 (Java List<Byte>)
+                        data[key] = f"<byte_array_len_{len(value)}>"
+                    elif isinstance(value, bytes):
+                        data[key] = f"<bytes_len_{len(value)}>"
                 elif isinstance(value, (dict, list)):
                     self._mask_sensitive_data(value)
         elif isinstance(data, list):
-            for item in data:
-                self._mask_sensitive_data(item)
+            for i, item in enumerate(data):
+                if isinstance(item, (dict, list)):
+                    self._mask_sensitive_data(item)
 
